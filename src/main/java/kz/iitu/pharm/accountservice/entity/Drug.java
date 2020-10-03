@@ -32,6 +32,12 @@ public class Drug {
 
     }
 
+    public Drug(Long id, String name, BigDecimal price) {
+        this.id=id;
+        this.name=name;
+        this.price=price;
+    }
+
     public String getName() {
         return name;
     }
