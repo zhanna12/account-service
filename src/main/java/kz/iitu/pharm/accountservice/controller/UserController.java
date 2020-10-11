@@ -1,5 +1,6 @@
 package kz.iitu.pharm.accountservice.controller;
 
+//import kz.iitu.pharm.accountservice.Service.impl.UserServiceImpl;
 import kz.iitu.pharm.accountservice.Service.impl.UserServiceImpl;
 import kz.iitu.pharm.accountservice.entity.Drug;
 import kz.iitu.pharm.accountservice.entity.User;
@@ -34,16 +35,10 @@ public class UserController {
 
     @Autowired
     private RestTemplate restTemplate;
-
-//    @ApiOperation(value = "Method to get list of users", response = List.class)
-//    @GetMapping("")
-//    public List<User> getAllUsers() {
-//        return userService.getAllUsers();
-//    }
-
-    @GetMapping("/")
-    public List<User> getUsers() {
-        return userRepository.findAll();
+    @ApiOperation(value = "Method to get list of users", response = List.class)
+    @GetMapping("")
+    public List<User> getAllUsers() {
+        return userService.getAllUsers();
     }
 
     @GetMapping("/find/")
@@ -55,17 +50,6 @@ public class UserController {
     @ResponseBody
     public User getUserById(@PathVariable("id") Long id) {
         return userRepository.findById(id).get();
-    }
-
-    @GetMapping("/list")
-    public Drug[] getAllDrugs() {
-        ResponseEntity<Drug[]> response =
-                restTemplate.getForEntity(
-                        "http://drug-service/drugs/",
-                        Drug[].class);
-        Drug[] products = response.getBody();
-
-        return products;
     }
 
     @ApiOperation(value = "Method for adding new users")
@@ -101,6 +85,41 @@ public class UserController {
 
         userService.updateUser(id, user);
     }
+
+    @GetMapping("/list")
+    public Drug[] getAllDrugs() {
+        ResponseEntity<Drug[]> response =
+                restTemplate.getForEntity(
+                        "http://drug-service/drugs/",
+                        Drug[].class);
+        Drug[] products = response.getBody();
+
+        return products;
+    }
+
+//
+//    @PostMapping
+//    public void createUser(@RequestBody User user) {
+//        System.out.println("UserController.createUser");
+//        System.out.println("user = " + user);
+//
+//        userService.createUser(user);
+//    }
+//
+//    @ApiOperation(value = "Update user by id")
+//    @PutMapping("/update/{id}")
+//    public void updateUser(@PathVariable Long id,
+//                           @RequestBody User user) {
+//
+//        System.out.println("UserController.updateUser");
+//        System.out.println("id = " + id);
+//        System.out.println("User = " + user);
+//
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        System.out.println("authentication.getName() = " + authentication.getName());
+//
+//        userService.updateUser(id, user);
+//    }
 
     @GetMapping("/products/{customerId}")
     public List<Drug> requestAllProducts(@PathVariable Long customerId) {

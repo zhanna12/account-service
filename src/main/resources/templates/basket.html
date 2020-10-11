@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <title>Login </title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/solid.css">
+    <script src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="/static/css/index.css" th:href="@{/css/index.css}">
+
+</head>
+<body>
+<div class="container">
+    <h4> <a href="javascript:history.back()">Go Back</a> </h4>
+    <div class="row panel-body">
+        <h2 class="col-md-11" th:inline="text">Total: [[${total}]]</h2>
+<!--        <a th:href="@{'/shoppingCart/checkout'}" class="col-md-1">-->
+<!--            <button type="button" class="btn btn-danger" th:text="Checkout">Checkout</button>-->
+<!--        </a>-->
+    </div>
+    <div class="panel-default well" th:each="product : ${drugs.entrySet()}">
+        <div class="panel-heading">
+            <h1><a th:text="${product.getKey().name}" th:href="@{'/product/' + ${product.getKey().id}}">Title</a></h1>
+        </div>
+        <div class="row panel-body">
+            <div th:inline="text" class="col-md-2">Price: [[${product.getKey().price}]] $</div>
+            <div th:inline="text" class="col-md-9">Quantity: [[${product.getValue()}]]</div>
+            <a th:href="@{'/shoppingCart/removeProduct/{id}'(id=${product.getKey().id})}" class="col-md-1">
+                <button type="button" class="btn-btn-primary" th:text="Remove">Remove</button>
+            </a>
+        </div>
+        <br></br>
+    </div>
+    <br></br>
+    </div>
+    </div>
+
+</div>
+</body>
+</html>

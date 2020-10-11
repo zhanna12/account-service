@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <title>Login </title>
+    <!--JQUERY-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- FRAMEWORK BOOTSTRAP-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/solid.css">
+    <script src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
+
+    <!-- css-->
+    <link rel="stylesheet" type="text/css" href="/static/css/index.css" th:href="@{/css/index.css}">
+
+</head>
+<body>
+<div class="container">
+
+<!--    <li class="active"><a th:href="@{/login}">Sign Out</a></li>-->
+    <h1> Item List </h1>
+
+    <form>
+        <table border="2" width="70%" cellpadding="2">
+            <tr>
+                <th> Item </th>
+                <th> Description </th>
+                <th> Price </th>
+                <th> Add to Basket </th>
+            </tr>
+            <tr th:each="item : ${drugs}">
+                <td th:text	="${item.name}"></td>
+                <td th:text="${item.name}"></td>
+                <td th:text="${item.price}"></td>
+                <td> <a th:href="@{'/shoppingCart/addProduct/'  + ${item.id}}">Add to Basket</a>
+                    </td>
+            </tr>
+        </table>
+    </form>
+
+    <br /> <br />
+
+<!--    <h1> My Basket </h1>-->
+
+<!--    <form>-->
+<!--        <table border="2" width="70%" cellpadding="2">-->
+<!--            <tr>-->
+<!--                <th> Item </th>-->
+<!--                <th> Description </th>-->
+<!--                <th> Price </th>-->
+<!--                <th> Remove from Basket </th>-->
+<!--            </tr>-->
+<!--            <tr th:each="item : ${drugs}">-->
+<!--                <td th:text	="${item.name}"></td>-->
+<!--                <td th:text="${item.name}"></td>-->
+<!--&lt;!&ndash;                <td th:text="${item.price}"></td>&ndash;&gt;-->
+<!--                <td> <a th:href="@{'/shoppingCart/removeProduct/' + ${item.id}}">Remove</a>-->
+<!--                    </td>-->
+<!--            </tr>-->
+<!--        </table>-->
+<!--    </form>-->
+
+<!--    <h3><a th:href="@{'/mybasket/' + ${users}}">Checkout</a> </h3>-->
+</div>
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+</body>
+</html>
