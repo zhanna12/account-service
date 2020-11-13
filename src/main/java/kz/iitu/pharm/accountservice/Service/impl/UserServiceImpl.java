@@ -1,5 +1,8 @@
 package kz.iitu.pharm.accountservice.Service.impl;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+import kz.iitu.pharm.accountservice.entity.Drug;
 import kz.iitu.pharm.accountservice.entity.User;
 import kz.iitu.pharm.accountservice.repository.UserRepository;
 import kz.iitu.pharm.accountservice.Service.UserService;
@@ -9,7 +12,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.logging.Logger;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +32,7 @@ public class UserServiceImpl implements UserService, UserDetailsService{
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
+
 
     @Override
     public void createUser(User user) {
@@ -46,7 +54,7 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 
     @Override
     public Optional<User> findById(Long UserId) {
-        return Optional.empty();
+        return userRepository.findById(UserId);
     }
 
     @Override

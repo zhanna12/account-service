@@ -37,6 +37,13 @@ public class User implements UserDetails {
     )
     private List<Role> roles;
 
+    public User(Long id, String name) {
+    }
+
+    public User() {
+
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;

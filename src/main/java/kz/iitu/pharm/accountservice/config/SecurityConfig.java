@@ -31,6 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(resources).permitAll()
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers("/users/**","/basket/**/**", "/drugs/**", "/register/**").permitAll()
+                .antMatchers("/users/list", "/hystrix/**", "/hystrix.stream","/actuator/hystrix.stream").permitAll()
                 .antMatchers("/users/create").hasAuthority("ADMIN")
                 .antMatchers("/users/update/**").hasAuthority("ADMIN")
                 .antMatchers("/drugs/add/**").hasAuthority("ADMIN")

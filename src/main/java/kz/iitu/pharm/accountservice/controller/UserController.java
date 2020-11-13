@@ -1,7 +1,11 @@
 package kz.iitu.pharm.accountservice.controller;
 
 //import kz.iitu.pharm.accountservice.Service.impl.UserServiceImpl;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+import kz.iitu.pharm.accountservice.Service.impl.BasketServiceImpl;
 import kz.iitu.pharm.accountservice.Service.impl.UserServiceImpl;
+import kz.iitu.pharm.accountservice.entity.Basket;
 import kz.iitu.pharm.accountservice.entity.Drug;
 import kz.iitu.pharm.accountservice.entity.User;
 import kz.iitu.pharm.accountservice.repository.UserRepository;
@@ -18,6 +22,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +37,8 @@ public class UserController {
     private UserRepository userRepository;
     @Autowired
     private UserServiceImpl userService;
+    @Autowired
+    private BasketServiceImpl basketService;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -49,7 +56,13 @@ public class UserController {
     @GetMapping("/{id}")
     @ResponseBody
     public User getUserById(@PathVariable("id") Long id) {
-        return userRepository.findById(id).get();
+        return userService.findById(id).get();
+    }
+
+    @GetMapping("/basket/{id}")
+    @ResponseBody
+    public List<Basket> getDrugs(@PathVariable("id") Long id) throws IOException {
+        return basketService.getBaskets(id);
     }
 
     @ApiOperation(value = "Method for adding new users")
@@ -97,6 +110,12 @@ public class UserController {
         return products;
     }
 
+    //            threadPoolKey = "drug",
+////            threadPoolProperties = {
+////            @HystrixProperty(name = "coreSize", value = "20"),
+////            @HystrixProperty(name = "maxQueueSize", value="10"),
+////    })
+
 //
 //    @PostMapping
 //    public void createUser(@RequestBody User user) {
@@ -139,6 +158,13 @@ public class UserController {
         return response;
     }
 
+
+    @HystrixCommand(fallbackMethod = "getDefaultProduct",
+            commandProperties = {
+                    @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000"),
+                    @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "5"),
+                    @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "50"),
+                    @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"), })
     @GetMapping("/product/{productId}/customer/{customerId}")
     public Drug requestProductByProductId(@PathVariable Long productId,
                                                  @PathVariable Long customerId) {
@@ -146,9 +172,9 @@ public class UserController {
         Drug response = new Drug();
         ResponseEntity<Drug> responseEntity;
 
-        Optional<User> customer = userRepository.findById(customerId);
+        Optional<User> customer = userService.findById(customerId);
 
-        if (customer != null) {
+        if (customer.isPresent()) {
             Map<String, Long> uriVariables = new HashMap<>();
             uriVariables.put("productId", productId);
 
@@ -161,6 +187,11 @@ public class UserController {
         return new Drug(response.getId(),
                 response.getName(),
                 response.getPrice());
+    }
+
+    public Drug getDefaultProduct(@PathVariable Long productId,
+                                          @PathVariable Long customerId) {
+    return new Drug(null,"not found", null);
     }
 
 }
