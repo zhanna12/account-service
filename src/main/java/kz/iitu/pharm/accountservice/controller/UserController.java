@@ -110,35 +110,6 @@ public class UserController {
         return products;
     }
 
-    //            threadPoolKey = "drug",
-////            threadPoolProperties = {
-////            @HystrixProperty(name = "coreSize", value = "20"),
-////            @HystrixProperty(name = "maxQueueSize", value="10"),
-////    })
-
-//
-//    @PostMapping
-//    public void createUser(@RequestBody User user) {
-//        System.out.println("UserController.createUser");
-//        System.out.println("user = " + user);
-//
-//        userService.createUser(user);
-//    }
-//
-//    @ApiOperation(value = "Update user by id")
-//    @PutMapping("/update/{id}")
-//    public void updateUser(@PathVariable Long id,
-//                           @RequestBody User user) {
-//
-//        System.out.println("UserController.updateUser");
-//        System.out.println("id = " + id);
-//        System.out.println("User = " + user);
-//
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        System.out.println("authentication.getName() = " + authentication.getName());
-//
-//        userService.updateUser(id, user);
-//    }
 
     @GetMapping("/products/{customerId}")
     public List<Drug> requestAllProducts(@PathVariable Long customerId) {

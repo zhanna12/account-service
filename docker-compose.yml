@@ -1,0 +1,68 @@
+version: '3'
+services:
+  eureka-service:
+    container_name: eureka-service
+    image: eureka-service:latest
+    ports:
+      - 8761:8761
+
+  account-service:
+    container_name: account-service
+    image: account-service:latest
+    ports:
+      - 8085:8085
+    depends_on:
+      - db
+      - eureka-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/midpharm
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 32546zhdn
+
+  db:
+    container_name: db
+    image: postgres:13
+    restart: always
+    ports:
+       - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=32546zhdn
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=midpharm
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  drug-service:
+    container_name: drug-service
+    image: drug-service:latest
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+      - eureka-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/midpharm
+      eureka.client.serviceUrl.defaultZone: http://localhost:8761/eureka/
+
+  basket-service:
+    container_name: basket-service
+    image: basket-service:latest
+    ports:
+      - 8081:8081
+    depends_on:
+      - db
+      - eureka-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/midpharm
+
+  zuul-server:
+    container_name: zuul-server
+    image: zuul-server:latest
+    ports:
+      - 8762:8762
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/midpharm
+
+volumes:
+  pgdata:

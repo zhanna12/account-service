@@ -6,11 +6,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
+@EnableWebSecurity(debug = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     String[] resources = new String[]{
@@ -30,9 +32,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/register").permitAll()
                 .antMatchers(resources).permitAll()
                 .antMatchers("/auth/**").permitAll()
-                .antMatchers("/users/**","/basket/**/**", "/drugs/**", "/register/**").permitAll()
+                .antMatchers("/basket/**/**", "/drugs/**", "/register/**").permitAll()
                 .antMatchers("/users/list", "/hystrix/**", "/hystrix.stream","/actuator/hystrix.stream").permitAll()
-                .antMatchers("/users/create").hasAuthority("ADMIN")
+                .antMatchers("/users/create", "/users/**").hasAuthority("ADMIN")
                 .antMatchers("/users/update/**").hasAuthority("ADMIN")
                 .antMatchers("/drugs/add/**").hasAuthority("ADMIN")
                 .anyRequest().authenticated()
@@ -53,6 +55,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 // Add a filter to validate the tokens with every request
                 .addFilterAfter(new JwtTokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+    }
+
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth)
+            throws Exception
+    {
+        auth.inMemoryAuthentication()
+                .withUser("rest-client")
+                .password("{noop}p@ssword")
+                .roles("REST_CLIENT");
     }
 
     @Bean

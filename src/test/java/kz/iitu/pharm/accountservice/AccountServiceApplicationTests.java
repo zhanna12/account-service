@@ -1,10 +1,10 @@
-package kz.iitu.pharm.orderservice;
+package kz.iitu.pharm.accountservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class OrderServiceApplicationTests {
+class AccountServiceApplicationTests {
 
 	@Test
 	void contextLoads() {
